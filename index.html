@@ -2,7 +2,7 @@
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 
-<title>PA#1</title>
+<title>PA#2</title>
 <style>
     body {
         background-color: #EEEEEE;
@@ -19,10 +19,18 @@
 
 <h2>Cyclic surface “Clover knot”</h2>
 
-<label for="nU">Кількість "хребців"</label>
-<input type="range" name="nU" id="nU" min="10" max="200" step="1" value="100">
-
-
+<label for="aC">Ambient Color</label>
+<input type="color" name="aC" id="aC" value="#333333">
+<label for="dC">Diffuse Color</label>
+<input type="color" name="dC" id="dC" value="#dddddd">
+<label for="sC">Specular Color</label>
+<input type="color" name="sC" id="sC" value="#ffffff">
+<br><label for="kA">Ambient coeficient</label>
+<input type="range" name="kA" id="kA" min="0" max="1" step="0.05" value="1">
+<br><label for="kD">Diffuse coeficient</label>
+<input type="range" name="kD" id="kD" min="0" max="1" step="0.05" value="1">
+<br><label for="kS">Specular coeficient</label>
+<input type="range" name="kS" id="kS" min="0" max="1" step="0.05" value="1">
 
 <div id="canvas-holder">
    <canvas width="600" height="600" id="webglcanvas" style="background-color:red"></canvas>
