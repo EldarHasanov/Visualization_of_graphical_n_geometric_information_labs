@@ -1,5 +1,5 @@
 # Visualization_of_graphical_n_geometric_information_labs
 
-Lab 2 GIF
+Lab 3 GIF
 
-![plot](./Lab2.gif)
+![plot](./lab3.gif)

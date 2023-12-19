@@ -5,6 +5,8 @@ let surface;                    // A surface model
 let shProgram;                  // A shader program
 let spaceball;                  // A SimpleRotator object that lets the user rotate the view by mouse.
 const { PI, sin, cos } = Math
+const timestamp = Date.now();
+let lightSurf;
 
 function deg2rad(angle) {
     return angle * Math.PI / 180;
@@ -128,7 +130,26 @@ function draw() {
     gl.uniform1f(shProgram.ikD, kD);
     gl.uniform1f(shProgram.ikS, kS);
 
+    gl.uniform1f(shProgram.iTime, (Date.now() - timestamp) * 0.001);
+
     surface.Draw();
+    gl.uniform1i(shProgram.iTranslateLight, true);
+    lightSurf.Draw();
+    gl.uniform1i(shProgram.iTranslateLight, false);
+}
+
+const hex2rgb = (hex) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+
+    // return {r, g, b} 
+    return { r, g, b };
+}
+
+function getAnimationFrame() {
+    draw()
+    window.requestAnimationFrame(getAnimationFrame)
 }
 
 function cloverKnotVerts(U_NUM_STEPS, V_NUM_STEPS, R, a) {
@@ -180,6 +201,46 @@ function normalAnalytic(u, v, R, a) {
     return n
 }
 
+function CreateSphereData() {
+    let vertexList = [];
+    let normalList = [];
+
+    let u = 0,
+        t = 0;
+    while (u < Math.PI * 2) {
+        while (t < Math.PI) {
+            let v = getSphereVertex(u, t);
+            let w = getSphereVertex(u + 0.1, t);
+            let wv = getSphereVertex(u, t + 0.1);
+            let ww = getSphereVertex(u + 0.1, t + 0.1);
+            vertexList.push(v.x, v.y, v.z);
+            normalList.push(v.x, v.y, v.z);
+            vertexList.push(w.x, w.y, w.z);
+            normalList.push(w.x, w.y, w.z);
+            vertexList.push(wv.x, wv.y, wv.z);
+            normalList.push(wv.x, wv.y, wv.z);
+            vertexList.push(wv.x, wv.y, wv.z);
+            normalList.push(wv.x, wv.y, wv.z);
+            vertexList.push(w.x, w.y, w.z);
+            normalList.push(w.x, w.y, w.z);
+            vertexList.push(ww.x, ww.y, ww.z);
+            normalList.push(ww.x, ww.y, ww.z);
+            t += 0.1;
+        }
+        t = 0;
+        u += 0.1;
+    }
+    return [vertexList, normalList]
+}
+const r = 0.05;
+function getSphereVertex(long, lat) {
+    return {
+        x: r * Math.cos(long) * Math.sin(lat),
+        y: r * Math.sin(long) * Math.sin(lat),
+        z: r * Math.cos(lat)
+    }
+}
+
 
 /* Initialize the WebGL context. Called from init() */
 function initGL() {
@@ -193,6 +254,8 @@ function initGL() {
     shProgram.iModelViewProjectionMatrix = gl.getUniformLocation(prog, "ModelViewProjectionMatrix");
     shProgram.iNormalMatrix = gl.getUniformLocation(prog, "NormalMatrix");
     shProgram.iColor = gl.getUniformLocation(prog, "color");
+    shProgram.iTime = gl.getUniformLocation(prog, "t");
+    shProgram.iTranslateLight = gl.getUniformLocation(prog, "translateLight");
     shProgram.ikA = gl.getUniformLocation(prog, "kA");
     shProgram.ikD = gl.getUniformLocation(prog, "kD");
     shProgram.ikS = gl.getUniformLocation(prog, "kS");
@@ -201,20 +264,15 @@ function initGL() {
     shProgram.iSpecularColor = gl.getUniformLocation(prog, "specularColor");
 
     surface = new Model('Surface');
+    lightSurf = new Model('Surface');
     let bufferDataCK = cloverKnotVerts(100, 100, 2, 0.5)
     surface.BufferData(bufferDataCK[0]);
     surface.NormalBufferData(bufferDataCK[1]);
+    let bufferDataLS = CreateSphereData();
+    lightSurf.BufferData(bufferDataLS[0])
+    lightSurf.NormalBufferData(bufferDataLS[1])
 
     gl.enable(gl.DEPTH_TEST);
-}
-
-const hex2rgb = (hex) => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-
-    // return {r, g, b} 
-    return { r, g, b };
 }
 
 
@@ -279,4 +337,5 @@ function init() {
     spaceball = new TrackballRotator(canvas, draw, 0);
 
     draw();
+    getAnimationFrame()
 }
