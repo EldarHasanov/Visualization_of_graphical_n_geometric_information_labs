@@ -1,40 +1,37 @@
 <!DOCTYPE html>
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 
-<title>PA#2</title>
-<style>
-    body {
-        background-color: #EEEEEE;
-    }
-</style>
+    <title>CGW</title>
+    <style>
+        body {
+            background-color: #EEEEEE;
+        }
+    </style>
 
-<script src="./Utils/trackball-rotator.js"></script>
-<script src="./Utils/m4.js"></script>
-<script src="./shader.gpu"></script>
-<script src="./main.js"></script>
+    <script src="./Utils/trackball-rotator.js"></script>
+    <script src="./Utils/m4.js"></script>
+    <script src="./shader.gpu"></script>
+    <script src="./main.js"></script>
 
 </head>
+
 <body onload="init()">
 
-<h2>Cyclic surface “Clover knot”</h2>
+    <h2>Cyclic surface “Clover knot”</h2>
 
-<label for="aC">Ambient Color</label>
-<input type="color" name="aC" id="aC" value="#333333">
-<label for="dC">Diffuse Color</label>
-<input type="color" name="dC" id="dC" value="#dddddd">
-<label for="sC">Specular Color</label>
-<input type="color" name="sC" id="sC" value="#ffffff">
-<br><label for="kA">Ambient coeficient</label>
-<input type="range" name="kA" id="kA" min="0" max="1" step="0.05" value="1">
-<br><label for="kD">Diffuse coeficient</label>
-<input type="range" name="kD" id="kD" min="0" max="1" step="0.05" value="1">
-<br><label for="kS">Specular coeficient</label>
-<input type="range" name="kS" id="kS" min="0" max="1" step="0.05" value="1">
-
-<div id="canvas-holder">
-   <canvas width="600" height="600" id="webglcanvas" style="background-color:red"></canvas>
-</div>
+    <label for="scale">Scaling number</label>
+    <input type="range" name="scale" id="scale" min="0.1" max="10" step="0.1">
 
 
-</body></html>
+    <div id="canvas-holder">
+        <canvas width="600" height="600" id="webglcanvas" style="background-color:red"></canvas>
+    </div>
+
+
+</body>
+
+</html>
